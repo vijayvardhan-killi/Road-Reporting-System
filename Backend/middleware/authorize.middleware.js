@@ -9,6 +9,10 @@ const authorize = (...roles) => {
                 return res.status(403).json({message : "Forbidden"});
             }
 
+            if(req.user.role ==='civillian' && req.params.id !== req.user.id){
+                return res.status(403).json({message : "Forbidden"});
+            }            
+
             next();
         }
         catch (error) {

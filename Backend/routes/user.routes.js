@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers , getUserById ,createUser } from "../controllers/user.controller.js";
+import { getAllUsers , getUserById ,createUser , updateUser , deleteUser , getCurrentUser } from "../controllers/user.controller.js";
 import authorize from "../middleware/authorize.middleware.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 
@@ -8,10 +8,11 @@ const userRouter = Router();
 
 userRouter.use(authMiddleware); // Apply authentication middleware to all user routes
 
-userRouter.get('/' , authorize("civillian"),getAllUsers);
+userRouter.get('/' , authorize("superadmin"),getAllUsers);
+userRouter.get('/me', getCurrentUser); 
 userRouter.get('/:id' , getUserById)
-userRouter.post('/' ,authorize("civillian") ,createUser);
-userRouter.put('/:id' , (req,res) => res.json({message : "Update a users"}))
-userRouter.delete('/:id' , (req , res) => res.json({message : "Delete user"}))
+userRouter.post('/' ,authorize("superadmin" ,"admin") ,createUser);
+userRouter.put('/:id',authorize("civillian","superadmin", "admin") , updateUser);
+userRouter.delete('/:id',authorize("superadmin" ,"admin"),deleteUser);
 
 export default userRouter
