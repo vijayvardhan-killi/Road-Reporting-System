@@ -7,6 +7,19 @@ const ticketSchema = new mongoose.Schema({
         required :true ,
         index : true ,
     } ,
+    // added location field
+    location : {
+        type : {
+            type : String ,
+            enum : ['Point'] ,
+            default : 'Point' ,
+        },
+
+        coordinates : {
+            type : [Number] , // [longitude, latitude]
+            required : true ,
+        }
+    },
     
     photoUrl : {
         type : String ,

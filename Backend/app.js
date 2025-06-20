@@ -6,8 +6,12 @@ import ticketRouter from './routes/ticket.routes.js';
 import cookieParser from 'cookie-parser';
 import connectToDataBase from './database/mongodb.js';
 import errorMiddleware from './middleware/error.middleware.js';
+import cors from 'cors';
+import {insertDistricts} from './controllers/area.controller.js';
 
 const app = express();
+// added cors
+app.use(cors({origin:'*'}));
 
 
 app.use(express.json());
@@ -32,4 +36,5 @@ app.get('/', (req, res) => {
 app.listen(PORT , async () => {
     console.log('Server is running on port 3000');
     await connectToDataBase();
+    // insertDistricts();
 });
