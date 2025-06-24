@@ -1,18 +1,20 @@
 import { Router } from "express";
-import { createTicket } from "../controllers/ticket.controller.js";
+import { createTicket,getTicketById ,getTicketsByUser,deleteTicket,getTicketsByArea,getAllTickets,updateTicket} from "../controllers/ticket.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
+import authorize from "../middleware/authorize.middleware.js";
 
 const ticketRouter = Router();
 
-ticketRouter.get('/' , (req , res) => res.json({message : 'Get All Tickets'}))
-ticketRouter.get('/:id' , (req , res) => res.json({message : 'Get  Ticket'}))
-ticketRouter.post('/' , authMiddleware,createTicket)
-ticketRouter.put('/:id' , (req , res) => res.json({message : 'Update a Ticket'}))
-ticketRouter.delete('/:id' ,(req , res) => res.json({message : 'Delete a Ticket'}) )
+ticketRouter.get('/' , authMiddleware,authorize("superadmin"),getAllTickets);
+ticketRouter.get('/:id' ,authMiddleware, getTicketById);//tested successfully.
+ticketRouter.post('/' , authMiddleware,createTicket)//tested successfully.
+ticketRouter.put('/:id' ,authMiddleware,authorize("civilian","admin","superadmin"), updateTicket);//tested successfully.
+ticketRouter.delete('/:id' ,authMiddleware,authorize("admin","superadmin"),deleteTicket);//tested successfully.
 
-ticketRouter.get('/user/:id' ,(req , res) => res.json({message : 'GET  Tickets of a User'}))
+ticketRouter.get('/user/:id' ,authMiddleware,authorize("civilian"),getTicketsByUser);//tested successfully.
 
-ticketRouter.get('/area/:id' ,(req , res) => res.json({message : 'GET  Tickets of an Area'}))
+
+ticketRouter.get('/area/:id' ,authMiddleware,authorize("admin"),getTicketsByArea);//tested successfully.
 
 
 
