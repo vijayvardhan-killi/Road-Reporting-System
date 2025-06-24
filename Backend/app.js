@@ -10,7 +10,7 @@ import cors from 'cors';
 import {insertDistricts} from './controllers/area.controller.js';
 
 const app = express();
-// added cors
+// added cors for giving access to any origins
 app.use(cors({origin:'*'}));
 
 

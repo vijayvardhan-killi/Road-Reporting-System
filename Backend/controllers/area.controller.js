@@ -3,7 +3,7 @@ import Area from '../models/area.model.js';
 
 
 // fuction to insert area points
- async function insertDistricts() {
+ export const insertDistricts=async ()=> {
   try {
     // await Area.deleteMany();
     const formatted = districts.map(d => ({
@@ -24,7 +24,7 @@ import Area from '../models/area.model.js';
 
 
 // function to find nearest area authority
-const findNearByAuthority=async function(location){
+export const findNearByAuthority=async (location)=>{
   if (
     !location ||
     location.type !== "Point" ||
@@ -52,6 +52,3 @@ return nearestArea;
 
 }
 
-
-
-export  {insertDistricts,findNearByAuthority};
