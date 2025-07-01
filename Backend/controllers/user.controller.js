@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
+import Area from "../models/area.model.js";
 import bcrypt from "bcryptjs";
 
 export const getAllUsers = async (req, res, next) => {
@@ -42,7 +43,7 @@ export const createUser = async (req , res , next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { name , email , password , role } = req.body;
+        const { name , email , password , role ,area } = req.body;
 
         //check if user already exists
         const existingUser = await User.findOne({email})
@@ -66,6 +67,25 @@ export const createUser = async (req , res , next) => {
             role : role || "civillian"
         }] , {session});
 
+        if (newUser[0].role === 'admin') {
+            // const createdArea = await Area.create()
+            // If the user is an admin, create an area with the admin's authority
+            //assuming req.area contains the area data as object
+            // area : {
+            //     name : "Admin Area" ,
+            //     coordinates : [longitude, latitude] // Replace with actual coordinates
+            // }
+            // const {area} = req.area; 
+            const areaData =  {
+                  name: area.name,
+                  location: {
+                    type: "Point",
+                    coordinates: area.coordinates
+                  },
+                  authority: newUser[0]._id // Use the created user's ID as authority
+                } 
+            await Area.create([areaData], { session});
+        }
 
         await session.commitTransaction();
 
