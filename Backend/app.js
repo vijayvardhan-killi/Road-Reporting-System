@@ -11,7 +11,7 @@ import cors from 'cors';
 
 
 const app = express();
-// added cors
+// added cors for giving access to any origins
 app.use(cors({origin:'*'}));
 
 
