@@ -1,10 +1,16 @@
-import { Button } from './components/ui/button'
+import SignIn from "./pages/SignIn"
+import SignUp from "./pages/SignUp"
+import LandingPage from "./pages/LandingPage"
+import { Routes , Route } from "react-router-dom"
+
 
 const App = () => {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button>Click me</Button>
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage/>}></Route>
+      <Route path="/signup" element={<SignUp/>}></Route>
+      <Route path="/signin" element={<SignIn/>}></Route>
+    </Routes>
   )
 }
 
