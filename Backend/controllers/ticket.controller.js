@@ -7,19 +7,22 @@ export const createTicket = async (req , res , next) => {
     const session = await mongoose.startSession();
     try {
         session.startTransaction();
-        const {location,description , photoUrl  } = req.body;
+        const {title,location,description , photoUrl  } = req.body;
+        console.log(location);
         //find nearest area authority
         const nearestArea=await findNearByAuthority(location);
-        // console.log(nearestArea);
+        //  console.log(nearestArea);
 
-        const newTicket = Ticket.create([{
+        const newTicket = await Ticket.create([{
             user : req.user.id ,
-            location:nearestArea.location,
+            title,
+            location:location,
             photoUrl ,
             description ,
             status:'open',
             assignedTo:nearestArea.authority
         }]);
+        // console.log(newTicket);
 
         await session.commitTransaction();
         

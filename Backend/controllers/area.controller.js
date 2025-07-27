@@ -17,7 +17,7 @@ export const findNearByAuthority=async (location)=>{
         type: "Point",
         coordinates: location.coordinates,
       },
-      $maxDistance: 10000 
+    
     }
   }
 });

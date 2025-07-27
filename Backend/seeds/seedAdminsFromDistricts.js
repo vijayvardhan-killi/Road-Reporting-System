@@ -39,7 +39,7 @@ const seedAdmins = async () => {
                 name : district.name , 
                 location : {
                     type : "Point",
-                    coordinates : district.coordinates
+                    coordinates : [district.coordinates[1], district.coordinates[0]]
                 },
                 authority : newUser[0]._id
             }]);
