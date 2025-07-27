@@ -8,6 +8,11 @@ const ticketSchema = new mongoose.Schema({
         index : true ,
     } ,
     // added location field
+    title:{
+        type:String,
+        required:true,
+
+    },
     location : {
         type : {
             type : String ,
