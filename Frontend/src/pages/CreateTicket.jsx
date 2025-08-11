@@ -1,5 +1,5 @@
 import React from 'react'
-import TicketForm from '@/components/TicketForm'
+import TicketForm from '@/components/Ticket/TicketForm'
 
 const CreateTicket = () => {
   return (
