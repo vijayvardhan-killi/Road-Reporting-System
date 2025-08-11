@@ -7,8 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge"
+import { CheckCircle } from "lucide-react";
 import { createTicket } from "@/api/ticket";
-import MapPicker from "@/components/MapPicker";
+import MapPicker from "@/components/Ticket/MapPicker";
 
 
 const TicketForm = () => {
@@ -31,8 +34,28 @@ const TicketForm = () => {
       photos,
     };
     const response = await createTicket(data);
+    
+
+    toast("Your Issue is submitted Successfully", {
+          description: new Date().toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: '2-digit'
+        }) + " at " + new Date().toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }),
+        // action: {
+        //   label: <CheckCircle className="text-green-500 w-5 h-5" />, // ✅ green tick icon
+        //   onClick: () => {} // No action needed for a tick
+        // },
+          
+        })
+    
     console.log("Form Data:", response);
-    alert("Form submitted! Check console for data.");
+    // alert("Form submitted! Check console for data.");
   };
 
   return (
