@@ -1,17 +1,18 @@
 import Hero from "@/components/Hero";
 import React from 'react'
-import { useContext } from "react";
 import { AuthContext } from "@/context/auth/authcontext";
-
+import Navbar from "@/components/Navbar";
+import HowItWorks from "@/components/HowItWorks";
+import Features from "@/components/Features";
+import Footer from "@/components/Footer";
 const LandingPage = () => {
-  const {email , name} = useContext(AuthContext);
   return (
     <div>
-      Landing page with 
-      <p>user name : {name || "Not logged in"}</p>
-      <p>emial : {email || "Not logged in"} </p>
-      
+      <Navbar></Navbar>
       <Hero></Hero>
+      <HowItWorks></HowItWorks>
+      <Features></Features>
+      <Footer></Footer>
     </div>
   )
 }

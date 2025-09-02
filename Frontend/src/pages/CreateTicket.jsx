@@ -3,7 +3,7 @@ import TicketForm from '@/components/Ticket/TicketForm'
 
 const CreateTicket = () => {
   return (
-    <div className="min-h-screen flex items-start justify-center pt-20 bg-gray-100">
+    <div className="min-h-screen flex items-start justify-center pt-20 bg-accent">
         <TicketForm></TicketForm>
       
     </div>
