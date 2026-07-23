@@ -13,4 +13,14 @@ api.interceptors.request.use((config) => {
     }
     return config;
   });
-  
+
+// clear a dead/expired token so the app doesn't keep sending it
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("accessToken");
+    }
+    return Promise.reject(error);
+  }
+);

@@ -9,23 +9,19 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useContext, useState } from "react"
 import { AuthContext } from "@/context/auth/authcontext"
 import { signUp } from "@/api/auth"
-
 
 export function SignUpForm({
   className,
   ...props
 }) {
   
-  const {email , setEmail ,password ,setPassword , name , setName , accessToken , setAccessToken } = useContext(AuthContext);
+  const {email , setEmail ,password ,setPassword , name , setName , setAccessToken } = useContext(AuthContext);
   const [error , setError] = useState(null);
-  console.log("name",name);
-  console.log("email",email);
-  console.log("pass",password);
-  console.log("accessToken",accessToken);
+  const navigate = useNavigate();
 
   const handleSubmit = async(e)=>{
     e.preventDefault()
@@ -43,9 +39,10 @@ export function SignUpForm({
     try{
       const token = await signUp(user);
       setAccessToken(token);
-      
+      // new sign-ups are always civilians
+      navigate("/my-tickets");
     }catch(err){
-        const message = err.status === 409 ? "User Alredy exists" : "Something went wrong"
+        const message = err.response?.status === 409 ? "User already exists" : "Something went wrong"
         setError(message)
     }
   }

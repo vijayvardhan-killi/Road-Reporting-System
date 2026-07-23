@@ -9,20 +9,26 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "@/context/auth/authcontext"
 import { useState, useContext } from "react"
 import { signIn } from "@/api/auth"
+import { decodeJwt } from "@/lib/jwt"
+
+const roleHome = {
+  civillian: "/my-tickets",
+  admin: "/admin",
+  superadmin: "/superadmin",
+};
+
 export function LoginForm({
   className,
   ...props
 }) {
 
-  const { email, setEmail, password, setPassword, loggedIn, setLoggedIn, setAccessToken } = useContext(AuthContext);
+  const { email, setEmail, password, setPassword, setAccessToken } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  console.log("email", email)
-  console.log("pass", password)
-  console.log("login",loggedIn)
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -40,16 +46,16 @@ export function LoginForm({
 
     try {
       const token = await signIn(user);
-      console.log("token :",token)
       setAccessToken(token);
-      setLoggedIn(true);
+      const decoded = decodeJwt(token);
+      navigate(roleHome[decoded?.role] || "/");
     } catch (err) {
-      const status = err.status;
+      const status = err.response?.status;
       var errorMessage = "";
       //match the error code to provide relevent information
       switch (status) {
         case 401:
-          errorMessage = "Email or Password";
+          errorMessage = "Incorrect email or password";
           break
         case 404:
           errorMessage = "User Not Found";
@@ -58,7 +64,6 @@ export function LoginForm({
           errorMessage = "Something went wrong try again"
           break
         }
-      setLoggedIn(false)
       setError(errorMessage)
     }
   }
