@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { getAllUsers , getUserById ,createUser , updateUser , deleteUser , getCurrentUser } from "../controllers/user.controller.js";
+import { getAllUsers , getUserById ,createUser , updateUser , deleteUser , getCurrentUser, getLeaderboard } from "../controllers/user.controller.js";
 import authorize from "../middleware/authorize.middleware.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 
 const userRouter = Router();
 
+userRouter.get('/leaderboard', getLeaderboard); // public — no auth required
 
-userRouter.use(authMiddleware); // Apply authentication middleware to all user routes
+userRouter.use(authMiddleware); // Apply authentication middleware to all remaining user routes
 
 userRouter.get('/' , authorize("superadmin"),getAllUsers);
 userRouter.get('/me', getCurrentUser); 

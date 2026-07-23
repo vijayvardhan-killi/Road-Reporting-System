@@ -32,6 +32,10 @@ export const getUserById = async (req, res, next) => {
             })
         }
 
+        return res.status(404).json({
+            success: false,
+            message: "User not found",
+        })
     }
     catch (error) {
         next(error)
@@ -66,6 +70,12 @@ export const createUser = async (req , res , next) => {
             password : hashedPassword ,
             role : role || "civillian"
         }] , {session});
+
+        if (newUser[0].role === 'admin' && !area) {
+            const error = new Error("Area (name + coordinates) is required when creating an admin");
+            error.statusCode = 400;
+            throw error;
+        }
 
         if (newUser[0].role === 'admin') {
             // const createdArea = await Area.create()
@@ -107,14 +117,21 @@ export const createUser = async (req , res , next) => {
 
 export const updateUser = async (req, res, next) => {
     try {
-    //   const userId = req.user.userId; 
       const userId = req.params.id; 
       const updates = req.body; 
-    if (req.user.role === 'civillian') {
-        const allowedUpdates = ['name' , 'email'];
-        const updates = Object.keys(updates);
 
-        const isValidUpdate = updates.every(field => allowedUpdates.includes(field));
+    if (req.user.role === 'civillian') {
+        if (userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only update your own profile"
+            });
+        }
+
+        const allowedUpdates = ['name' , 'email'];
+        const updateFields = Object.keys(updates);
+
+        const isValidUpdate = updateFields.every(field => allowedUpdates.includes(field));
         if (!isValidUpdate) {
             return res.status(400).json({
                 success: false,
@@ -184,3 +201,19 @@ export const getCurrentUser = async (req , res , next) => {
     }
     
 }
+
+// public leaderboard of civilians ranked by points earned from resolved reports
+export const getLeaderboard = async (req, res, next) => {
+    try {
+        const topUsers = await User.find({ role: 'civillian', points: { $gt: 0 } }, 'name points')
+            .sort({ points: -1 })
+            .limit(20);
+
+        res.status(200).json({
+            success: true,
+            data: topUsers,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

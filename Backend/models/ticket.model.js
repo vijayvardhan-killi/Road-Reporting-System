@@ -4,9 +4,18 @@ const ticketSchema = new mongoose.Schema({
     user : {
         type : mongoose.Schema.Types.ObjectId ,
         ref : 'User' ,
-        required :true ,
+        default : null ,
         index : true ,
     } ,
+    isAnonymous : {
+        type : Boolean ,
+        default : false ,
+    },
+    // required only for anonymous reports so a real contact exists on file
+    reporterPhone : {
+        type : String ,
+        match : [/^\+?[0-9]{7,15}$/ , "Please provide a valid phone number"] ,
+    },
     // added location field
     title:{
         type:String,
@@ -28,7 +37,7 @@ const ticketSchema = new mongoose.Schema({
     
     photoUrl : {
         type : String ,
-        required : [true , "Photo URL is required"] ,
+        default : null ,
     },
 
     description : {
@@ -37,6 +46,14 @@ const ticketSchema = new mongoose.Schema({
         maxLength : 500 ,
         required : [true , "Description is required"] ,
     } ,
+
+    // civilian-assessed risk, 1 (minor) to 10 (severe/hazardous)
+    riskRating : {
+        type : Number ,
+        min : 1 ,
+        max : 10 ,
+        required : [true , "Risk rating is required"] ,
+    },
 
     status : {
         type : String ,
@@ -52,8 +69,23 @@ const ticketSchema = new mongoose.Schema({
     } ,
     resolvedAt : {
         type : Date 
+    },
+    // guards against double-awarding points if status flips back and forth
+    pointsAwarded : {
+        type : Boolean ,
+        default : false ,
     }
 }, {timestamps : true}) ;
+
+ticketSchema.pre('validate', function(next) {
+    if (this.isAnonymous && !this.reporterPhone) {
+        return next(new Error('A phone number is required for anonymous reports'));
+    }
+    if (!this.isAnonymous && !this.user) {
+        return next(new Error('A signed-in ticket must have a user'));
+    }
+    next();
+});
 
 
 

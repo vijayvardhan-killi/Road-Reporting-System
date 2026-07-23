@@ -1,13 +1,19 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { config } from 'dotenv';
 import User from '../models/user.model.js';
+
+config({ path: '.env' });
 
 const createSuperAdmin = async () => {
   try {
-    const DB_URI = "" //DB URI should be set here, e.g., process.env.DB_URI or a direct string
+    const DB_URI = process.env.DB_URI;
+    if (!DB_URI) {
+      throw new Error('DB_URI is not set. Create a .env file (see .env.example).');
+    }
     await mongoose.connect(DB_URI); 
 
-    const existing = await User.findOne({ role: 'super-admin' });
+    const existing = await User.findOne({ role: 'superadmin' });
     if (existing) {
       console.log('❗ Super Admin already exists:', existing.email);
       return process.exit(0);

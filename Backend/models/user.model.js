@@ -28,6 +28,13 @@ const userShema = new mongoose.Schema({
         type : String  ,
         enum : ["civillian" , "admin" , 'superadmin'],
         default : "civillian" ,
+    },
+
+    // awarded when a civilian's reported ticket is resolved; drives the leaderboard
+    points : {
+        type : Number ,
+        default : 0 ,
+        min : 0 ,
     }
 
 } , {timestamps : true});

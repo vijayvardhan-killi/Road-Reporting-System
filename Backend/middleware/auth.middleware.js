@@ -27,7 +27,7 @@ const authMiddleware = (req , res , next) => {
 
     }catch (error) {
         console.error('Error in authentication middleware:', error);
-        return res.status(500).json({message: 'Internal server error' ,type :"JWT Error"});
+        return res.status(401).json({message: 'Invalid or expired token' ,type :"JWT Error"});
     }
 };
 

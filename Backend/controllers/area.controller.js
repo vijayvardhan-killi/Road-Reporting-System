@@ -9,23 +9,16 @@ export const findNearByAuthority=async (location)=>{
   ) {
     throw new Error("Invalid coordinates object");
   }
-  try{
-    const nearestArea = await Area.findOne({
-  location: {
-    $near: {
-      $geometry: {
-        type: "Point",
-        coordinates: location.coordinates,
+  const nearestArea = await Area.findOne({
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: location.coordinates,
+        },
       },
-    
-    }
-  }
-});
-return nearestArea;
-  }catch(err){
-    return err;
-  }
-
-
+    },
+  });
+  return nearestArea;
 }
 

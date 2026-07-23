@@ -1,18 +1,19 @@
 import mongoose from "mongoose";
 import bcrypt  from "bcryptjs";
-// import dotenv from "dotenv";
+import { config } from "dotenv";
 import { districtData } from "./data/districts.js";
 import User from "../models/user.model.js";
 import Area from "../models/area.model.js";
 
-// dotenv.config();
-// console.log("🧪 DB_URI:", process.env.DB_URI);
+config({ path: ".env" });
 
-// console.log(districtData)
 const seedAdmins = async () => {
     try {
-        const DB_URI = "" ; //DB URI should be set here, e.g., process.env.DB_URI or a direct string
-        mongoose.connect(DB_URI);
+        const DB_URI = process.env.DB_URI;
+        if (!DB_URI) {
+            throw new Error("DB_URI is not set. Create a .env file (see .env.example).");
+        }
+        await mongoose.connect(DB_URI);
         console.log("Connected to MongoDB");
 
         for (const district of districtData) {
